@@ -1,0 +1,7 @@
+base   cosmocode
+author Andreas Gohr
+email  dokuwiki@cosmocode.de
+date   2024-10-09
+name   cosmocode plugin
+desc   Access DokuWiki services provided by CosmoCode
+url    https://www.dokuwiki.org/plugin:cosmocode
