@@ -1,0 +1,1 @@
+Thank you for being a supporter of the DokuWiki ecosystem! Below you will find a list of extensions that are curently available as early access versions to you. These extensions will have features, bugfixes and improvements that are not yet available in the public versions. Refer to the documentation of each extension for more information on the changes.

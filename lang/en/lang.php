@@ -6,8 +6,11 @@
  * @author Andreas Gohr <dokuwiki@cosmocode.de>
  */
 
-// menu entry for admin plugins
-// $lang['menu'] = 'Your menu entry';
 
-// custom language strings for the plugin
-// $lang['fixme'] = 'FIXME';
+$lang['menu'] = 'CosmoCode Services';
+
+$lang['tab_partner'] = 'Partner Program';
+$lang['tab_support'] = 'Get Support';
+
+$lang['error_connect'] = "Failed to connect to the ComoCode API. Please make sure your server can connect to %s.\n%s";
+$lang['error_api'] = "Error while calling the CosmoCode API. Make sure your Partner Code is valid or try again later.\n%s";

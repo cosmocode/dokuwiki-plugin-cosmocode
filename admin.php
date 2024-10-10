@@ -24,18 +24,65 @@ class admin_plugin_cosmocode extends AdminPlugin
     public function html()
     {
         // FIXME render output
-        echo '<h1>' . $this->getLang('menu') . '</h1>';
+
 
         // FIXME add tabs
         // FIXME add a "get support" tab
 
+        global $ID;
+        global $INPUT;
+
+        $tabs = [
+            'partner' => wl($ID, ['do' => 'admin', 'page' => 'cosmocode', 'tab' => 'partner']),
+            'support' => wl($ID, ['do' => 'admin', 'page' => 'cosmocode', 'tab' => 'support']),
+        ];
+        $current = $INPUT->str('tab', 'partner');
+
+        echo '<h1>' . $this->getLang('menu') . '</h1>';
+        echo '<ul class="tabs">';
+        foreach ($tabs as $tab => $url) {
+            $class = ($current === $tab) ? 'active' : '';
+
+            echo "<li class='$class'>";
+            echo '<a href="' . $url . '">' . $this->getLang('tab_' . $tab) . '</a>';
+            echo '</li>';
+        }
+        echo '</ul>';
+        echo '<br>';
+
+        switch ($current) {
+            case 'partner':
+                $this->showPartnerTab();
+                break;
+            case 'support':
+                $this->showSupportTab();
+                break;
+        }
+    }
+
+    protected function showPartnerTab()
+    {
         $this->showTokenInfo();
         $this->showFeed();
     }
 
+    protected function showSupportTab()
+    {
+        echo $this->locale_xhtml('support');
+    }
+
+    /**
+     * Show the list of available extensions
+     */
     protected function showFeed()
     {
-        $extensions = $this->getExtensions();
+        try {
+            $extensions = $this->getExtensions();
+        } catch (\Exception $e) {
+            msg(nl2br(hsc($e->getMessage())), -1);
+            return;
+        }
+
         echo '<ul class="extensions">';
         foreach ($extensions as $ext) {
             echo '<li>';
@@ -58,14 +105,20 @@ class admin_plugin_cosmocode extends AdminPlugin
         echo '</ul>';
     }
 
+    /**
+     * Tell the user about their current partner status
+     * @return void
+     */
     protected function showTokenInfo()
     {
         $tokens = $this->getTokens();
         if (!$tokens) {
-            echo '<p>No valid tokens configured</p>'; // FIXME load a nice text explaining how to get tokens
+            echo $this->locale_xhtml('partner-no');
             return;
         }
+        echo $this->locale_xhtml('partner-yes');
 
+        echo '<p>';
         foreach ($tokens as $token => $data) {
             echo '<div class="token">';
             if ($data['scopes'][0] === '') {
@@ -76,8 +129,16 @@ class admin_plugin_cosmocode extends AdminPlugin
             echo ' valid until ' . date('Y-m-d', $data['exp']);
             echo '</div>';
         }
+        echo '</p>';
     }
 
+    /**
+     * Get the tokens from the config
+     *
+     * Decodes the payload and filters out expired tokens
+     *
+     * @return array
+     */
     protected function getTokens()
     {
         $lines = $this->getConf('tokens');
@@ -118,15 +179,25 @@ class admin_plugin_cosmocode extends AdminPlugin
         return $form->toHTML();
     }
 
+    /**
+     * Talk to the API to get the list of extensions
+     *
+     * Results are cached for 24 hours
+     *
+     * @return array
+     * @throws Exception
+     */
     protected function getExtensions()
     {
         $http = new \dokuwiki\HTTP\DokuHTTPClient();
         $url = self::HOST . 'feed';
+        $domain = parse_url(self::HOST, PHP_URL_HOST);
 
         $tokens = $this->getTokens();
         if ($tokens) {
             $http->headers['x-token'] = join(',', array_keys($tokens));
         }
+        $http->headers['x-wiki-id'] = md5(auth_cookiesalt());
 
         $cache = getCacheName($url . join(',', array_keys($tokens)), '.json');
         if (@filemtime($cache) > time() - 60 * 60 * 24) {
@@ -137,9 +208,13 @@ class admin_plugin_cosmocode extends AdminPlugin
                 $data = $http->resp_body;
                 $decoded = json_decode($data, true);
                 if ($decoded && isset($decoded['error'])) {
-                    throw new \RuntimeException('API returned error: ' . $decoded['error']);
+                    throw new \RuntimeException(
+                        sprintf($this->getLang('error_api'), $decoded['error'])
+                    );
                 } else {
-                    throw new \RuntimeException('Could not fetch data from API.');
+                    throw new \RuntimeException(
+                        sprintf($this->getLang('error_connect'), $domain, $http->error)
+                    );
                 }
             }
             io_saveFile($cache, $data);
@@ -148,6 +223,10 @@ class admin_plugin_cosmocode extends AdminPlugin
     }
 
     /**
+     * Decode the payload of a JWT token
+     *
+     * Does not validate expiration or signature
+     *
      * @link https://www.converticacommerce.com/support-maintenance/security/php-one-liner-decode-jwt-json-web-tokens/
      * @param $jwt
      * @return array
