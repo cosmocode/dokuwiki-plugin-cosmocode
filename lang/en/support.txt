@@ -1,12 +1,12 @@
-CosmoCode offers a broad range of professional DokuWiki services. That includes
+At CosmoCode, we offer a full range of professional DokuWiki services designed to meet your specific requirements. From
+custom plugin and template development to setup and ongoing support, we've got you covered. Our team also provides
+expert training, workshops, and seamless infrastructure integration to ensure a smooth and efficient experience.
+We additionally offer secure, reliable hosting solutions, and much more.
 
-    * Custom Plugin and Template development
-    * Setup and Usage Support
-    * Training and Workshops
-    * Infrastructure integration
-    * Hosting
-    * and much more
+To learn more about how we can enhance your DokuWiki experience, visit our [[https://www.cosmocode.de/en/services/wiki/dokuwiki/|website]].
+To contact us, please email us at <dokuwiki+support@cosmocode.de> and we will get back to you as soon as possible.
 
-You can learn more about our services at our [[https://www.cosmocode.de/en/services/wiki/dokuwiki/|website]].
+Please include the debug data below in your email, so we have a better understanding of your setup.
+
 
 
