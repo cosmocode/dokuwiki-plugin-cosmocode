@@ -151,7 +151,7 @@ class admin_plugin_cosmocode extends AdminPlugin
             } else {
                 echo hsc($data['scopes'][0]) . ' Token';
             }
-            echo ' valid until ' . date('Y-m-d', $data['exp']);
+            echo ' ' . sprintf($this->getLang('valid_until'), dformat($data['exp']));
             echo '</div></li>';
         }
         echo '</ul>';
@@ -172,7 +172,7 @@ class admin_plugin_cosmocode extends AdminPlugin
         $form = new Form(['action' => $action]);
         $form->setHiddenField('installurl', $dl);
         $form->setHiddenField('overwrite', 1);
-        $form->addButton('submit', 'Install')->attr('type', 'submit');
+        $form->addButton('submit', $this->getLang('btn_install'))->attr('type', 'submit');
         return $form->toHTML();
     }
 }

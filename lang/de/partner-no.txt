@@ -1,0 +1,3 @@
+Sie haben derzeit **keinen gültigen Partnercode** konfiguriert, daher sind die unten aufgeführten Early-Access-Versionen der Erweiterungen für Sie nicht verfügbar.
+
+Lesen Sie mehr über die Vorteile des [[https://www.cosmocode.de/de/leistungen/wiki/dokuwiki-partnership/|DokuWiki Business Plugin Partnerprogram]] und wie Sie Partner werden können. Wenn Sie bereits ein registrierter Partner sind, konfigurieren Sie bitte Ihren Code im [[?do=admin&page=config#plugin____cosmocode____plugin_settings_name|Konfigurationsmanager]].
