@@ -77,13 +77,17 @@ class admin_plugin_cosmocode extends AdminPlugin
 
         global $conf;
         $data = [
+            'dt' => dformat(null, '%Y-%m-%d'),
             'partner' => array_values($this->hlp_partner->getTokens()),
             'dokuwiki' => getVersionData(),
             'conf' => array_merge(
                 array_intersect_key($conf, array_flip(
-                    ['title', 'tagline', 'baseurl', 'basedir', 'useacl', 'authtype', 'template']
+                    ['title', 'tagline', 'baseurl', 'basedir', 'savedir', 'useacl', 'authtype', 'template']
                 )),
-                ['wiki-id' => md5(auth_cookiesalt())],
+                [
+                    'wiki-id' => md5(auth_cookiesalt()),
+                    'inc' => DOKU_INC,
+                ],
             ),
             'environment' => $this->hlp_support->getRuntimeVersions(),
             'plugins' => $this->hlp_support->getPlugins(),
